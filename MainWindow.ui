@@ -84,7 +84,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>20</y>
         <width>381</width>
         <height>461</height>
        </rect>
@@ -163,16 +163,6 @@
         <string>Сумма к расчету</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="dep_input">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>361</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="pos_input">
        <property name="geometry">
         <rect>
@@ -236,6 +226,16 @@
         <string>Ставка</string>
        </property>
       </widget>
+      <widget class="QComboBox" name="department_input">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>361</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="category">
       <property name="geometry">
@@ -243,7 +243,7 @@
         <x>430</x>
         <y>10</y>
         <width>321</width>
-        <height>241</height>
+        <height>281</height>
        </rect>
       </property>
       <property name="title">
@@ -278,7 +278,7 @@
         <string>Технолог</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="pp">
+      <widget class="QRadioButton" name="ti">
        <property name="geometry">
         <rect>
          <x>20</x>
@@ -288,14 +288,14 @@
         </rect>
        </property>
        <property name="text">
-        <string>Производственный персонал</string>
+        <string>Повременьщик</string>
        </property>
       </widget>
       <widget class="QRadioButton" name="ws">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>160</y>
+         <y>240</y>
          <width>261</width>
          <height>21</height>
         </rect>
@@ -315,6 +315,19 @@
        </property>
        <property name="text">
         <string>Специалист</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="sd">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>161</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Сдельщик</string>
        </property>
       </widget>
      </widget>
@@ -345,9 +358,9 @@
       <property name="geometry">
        <rect>
         <x>430</x>
-        <y>260</y>
+        <y>290</y>
         <width>321</width>
-        <height>191</height>
+        <height>161</height>
        </rect>
       </property>
       <property name="title">
@@ -371,7 +384,7 @@
         <string>Оклад замещающего работника:</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="do_salaty_input">
+      <widget class="QLineEdit" name="do_salary_input">
        <property name="geometry">
         <rect>
          <x>20</x>
