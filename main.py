@@ -1,8 +1,9 @@
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QTableWidgetItem
 from connection import Connection
 from fot_summary import FOT_summary
 from shtat_to_excel import Shtat_To_Excel
+from pprint import pprint
 
 
 class Search:
@@ -223,6 +224,36 @@ class Buttons:
         file_name = form.save_shtat_input.text()
         saver = Shtat_To_Excel(file_name)
         saver.shtat_to_excel()
+
+    @staticmethod
+    def count_button():
+        Count_stimul_data()
+
+
+class Count_stimul_data:
+    def __init__(self):
+        self.fot = int(form.fot_input.text())
+        self.workdays = int(form.workday_input.text())
+        self.fot_summary = FOT_summary(self.fot, self.workdays)
+        self.main_data = self.fot_summary.calculate_stimul()
+        self.data_list = []
+        self.stimul_to_list()
+        self.print_results()
+
+    def stimul_to_list(self):
+        for item, v in enumerate(self.main_data):
+            self.data_list.append([v, self.main_data[v]['pp_oklad'], self.main_data[v]['pp_stimul'],
+                                   self.main_data[v]['np_oklad'], self.main_data[v]['np_stimul'],
+                                   self.main_data[v]['tt_oklad'], self.main_data[v]['tt_stimul'],
+                                   self.main_data[v]['fot_percent']])
+
+    def print_results(self):
+        form.stimul_table.setRowCount(len(self.data_list))
+        form.stimul_table.setColumnCount(8)
+        for i in range(0, len(self.data_list)):
+            for j in range(0, 8):
+                item = QTableWidgetItem(str(self.data_list[i][j]))
+                form.stimul_table.setItem(i, j, item)
     # ------------ Основной код ----------------
 
 
@@ -260,6 +291,7 @@ if __name__ == '__main__':
     form.delete_button.clicked.connect(Buttons.delete_button)
     form.save_button.clicked.connect(Buttons.save_button)
     form.save_shtat_table.clicked.connect(Buttons.save_shtat_table_button)
+    form.count_button.clicked.connect(Buttons.count_button)
 
     form.left_button.setEnabled(False)
     form.right_button.setEnabled(False)

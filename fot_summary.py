@@ -4,12 +4,10 @@ from pprint import pprint
 
 
 class FOT_summary:
-    def __init__(self, fot, workdays, secret, stimul):
+    def __init__(self, fot, workdays):
         self.conn = Connection.connect()
         self.fot = fot
         self.workdays = workdays
-        self.secret = secret
-        self.stimul = stimul
         self.data = self.get_shtat_data()
         for i in range(0, len(self.data)):
             self.data[i] = list(self.data[i])
@@ -83,6 +81,6 @@ class FOT_summary:
 
 
 if __name__ == '__main__':
-    fot_counting = FOT_summary(54200000, 21, 150000, 1.5)
+    fot_counting = FOT_summary(54200000, 21)
     data = fot_counting.calculate_stimul()
     pprint(data)
