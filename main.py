@@ -1,6 +1,8 @@
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QApplication
 from connection import Connection
+from fot_summary import FOT_summary
+from shtat_to_excel import Shtat_To_Excel
 
 
 class Search:
@@ -215,6 +217,12 @@ class Buttons:
     def save_button():
         pos_data = Save_data()
         pos_data.save()
+
+    @staticmethod
+    def save_shtat_table_button():
+        file_name = form.save_shtat_input.text()
+        saver = Shtat_To_Excel(file_name)
+        saver.shtat_to_excel()
     # ------------ Основной код ----------------
 
 
@@ -251,6 +259,7 @@ if __name__ == '__main__':
     form.new_position_button.clicked.connect(Buttons.new_position_button)
     form.delete_button.clicked.connect(Buttons.delete_button)
     form.save_button.clicked.connect(Buttons.save_button)
+    form.save_shtat_table.clicked.connect(Buttons.save_shtat_table_button)
 
     form.left_button.setEnabled(False)
     form.right_button.setEnabled(False)

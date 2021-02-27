@@ -33,7 +33,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="shtat_table">
      <attribute name="title">
@@ -73,6 +73,29 @@
       </property>
       <property name="text">
        <string>Выгрузить для расчета отклонений</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="save_shtat_input">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>440</y>
+        <width>351</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="save_shtat_label">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>400</y>
+        <width>351</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Файл выгрузки:</string>
       </property>
      </widget>
     </widget>
