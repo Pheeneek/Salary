@@ -86,7 +86,6 @@ class Actions:
         pass
 
     def clear_form(self):
-        search, current_position = [], 0
         self.gui.form.department_input.setCurrentIndex(0)
         self.gui.form.pos_input.clear()
         self.gui.form.pos_count_input.clear()
@@ -97,22 +96,21 @@ class Actions:
         self.gui.form.do_salary_input.clear()
         self.gui.form.vacancy.setChecked(False)
         self.gui.form.history_text.clear()
-        self.gui.form.search_number.setText(f"Позиция : {current_position} из {len(search)}")
+        self.gui.form.search_number.setText(f"Позиция : 0 из 0")
         self.gui.form.left_button.setEnabled(False)
         self.gui.form.right_button.setEnabled(False)
         self.gui.form.delete_button.setEnabled(False)
         self.gui.form.save_button.setEnabled(False)
 
     def delete_confirmation(self):
-        global search, current_position
-        message = f'Вы уверены, что хотите удалить штатную единицу "{search[current_position - 1][2]}"?'
+        message = f'Вы уверены, что хотите удалить штатную единицу "{self.gui.search[self.gui.current_position - 1][2]}"?'
         reply = QtWidgets.QMessageBox.question(self.gui.window, 'Удаление штатной единицы', message,
                                                QtWidgets.QMessageBox.Yes,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             conn = Connection.connect()
             cursor = conn.cursor()
-            cursor.execute(f"DELETE FROM salaries WHERE id = '{search[current_position - 1][0]}';")
+            cursor.execute(f"DELETE FROM salaries WHERE id = '{self.gui.search[self.gui.current_position - 1][0]}';")
             conn.commit()
             self.clear_form()
 
@@ -157,13 +155,12 @@ class Save_data:
                            f"'{self.history}', '{self.decree_tarif}', '{self.position_type}');")
             self.con.commit()
             self.gui.form.save_button.setEnabled(False)
-            Save_data.save_confirmation()
-        except:
+            self.save_confirmation()
+        except NameError:
             print("Ошибка записи в базу!!!")
 
-    @staticmethod
-    def save_confirmation():
-        msg = QtWidgets.QMessageBox(gui.window)
+    def save_confirmation(self):
+        msg = QtWidgets.QMessageBox(self.gui.window)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.setText("Позиция упешно добавлена в базу!")
         msg.setWindowTitle("Сохранение позиции")
@@ -190,18 +187,20 @@ class Count_stimul_data:
                                    self.main_data[v]['np_oklad'], self.main_data[v]['np_stimul'],
                                    self.main_data[v]['tt_oklad'], self.main_data[v]['tt_stimul'],
                                    self.main_data[v]['fot_percent']])
+        self.data_list.sort()
 
     def print_results(self):
 
-        self.gui.stimul_table.setRowCount(len(self.data_list))
-        self.gui.stimul_table.setColumnCount(8)
-        self.gui.stimul_table.setHorizontalHeaderLabels(['Подразделение', 'ПП оклады', 'ПП стимул',
+        self.gui.form.stimul_table.setRowCount(len(self.data_list))
+        self.gui.form.stimul_table.setColumnCount(8)
+        self.gui.form.stimul_table.setHorizontalHeaderLabels(['Подразделение', 'ПП оклады', 'ПП стимул',
                                                          'НП оклады', 'НП стимул',
                                                          'Технологи оклады', 'Технологи стимул', 'Процент'])
         for i in range(0, len(self.data_list)):
             for j in range(0, 8):
                 item = QTableWidgetItem(str(self.data_list[i][j]))
                 self.gui.form.stimul_table.setItem(i, j, item)
+        self.gui.form.stimul_table.resizeColumnsToContents()
     # ------------ Основной код ----------------
 
 
@@ -250,7 +249,7 @@ class Gui:
         # Запуск цикла
 
         self.search = []
-        self.current_position = 0
+        self.current_position = 1
         app.exec()
 
     def search_button(self):
@@ -299,4 +298,3 @@ class Gui:
 
 if __name__ == '__main__':
     gui = Gui()
-
