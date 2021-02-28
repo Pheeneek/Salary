@@ -3,18 +3,19 @@ from PyQt5.QtWidgets import QApplication, QTableWidgetItem
 from connection import Connection
 from fot_summary import FOT_summary
 from shtat_to_excel import Shtat_To_Excel
-from pprint import pprint
 
 
 class Search:
-    def __init__(self):
+    def __init__(self, qtgui):
+        self.gui = qtgui
+        self.search, self.current_position = [], 0
         self.con = Connection.connect()
-        self.department = form.department_input.currentText()
-        self.position = form.pos_input.text()
-        self.fio = form.fio_input.text()
-        self.tarif = form.tarif_input.text()
-        self.salary = form.salary_input.text()
-        self.pos_count = form.pos_count_input.text()
+        self.department = self.gui.form.department_input.currentText()
+        self.position = self.gui.form.pos_input.text()
+        self.fio = self.gui.form.fio_input.text()
+        self.tarif = self.gui.form.tarif_input.text()
+        self.salary = self.gui.form.salary_input.text()
+        self.pos_count = self.gui.form.pos_count_input.text()
         cursor = self.con.cursor()
         try:
             cursor.execute(f"SELECT * FROM salaries WHERE "
@@ -30,85 +31,82 @@ class Search:
 
     def search_clicked(self):
         if self.search_result and len(self.search_result) > 0:
-            form.search_number.setText(f"Позиция : {1} из {len(self.search_result)}")
-            form.delete_button.setEnabled(True)
+            self.gui.form.search_number.setText(f"Позиция : {1} из {len(self.search_result)}")
+            self.gui.form.delete_button.setEnabled(True)
             if len(self.search_result) > 1:
-                form.right_button.setEnabled(True)
+                self.gui.form.right_button.setEnabled(True)
             else:
-                form.right_button.setEnabled(False)
+                self.gui.form.right_button.setEnabled(False)
         else:
-            form.search_number.setText(f"Позиция : {0} из {0}")
+            self.gui.form.search_number.setText(f"Позиция : {0} из {0}")
         if self.search_result:
-            Actions.position_output(self.search_result[0])
+            self.gui.actions.position_output(self.search_result[0])
             return self.search_result
 
 
 class Actions:
-    @staticmethod
-    def set_save():
-        form.save_button.setEnabled(True)
+    def __init__(self, qtgui):
+        self.gui = qtgui
 
-    @staticmethod
-    def position_output(pos_info):
-        form.department_input.setCurrentText(f'{pos_info[1]}')
-        form.pos_input.setText(f'{pos_info[2]}')
-        form.pos_count_input.setText(f'{pos_info[3]}')
-        form.fio_input.setText(f'{pos_info[6]}')
-        form.tarif_input.setText(f'{pos_info[4]}')
-        form.salary_input.setText(f'{pos_info[5]}')
+    def set_save(self):
+        self.gui.form.save_button.setEnabled(True)
+
+    def position_output(self, pos_info):
+        self.gui.form.department_input.setCurrentText(f'{pos_info[1]}')
+        self.gui.form.pos_input.setText(f'{pos_info[2]}')
+        self.gui.form.pos_count_input.setText(f'{pos_info[3]}')
+        self.gui.form.fio_input.setText(f'{pos_info[6]}')
+        self.gui.form.tarif_input.setText(f'{pos_info[4]}')
+        self.gui.form.salary_input.setText(f'{pos_info[5]}')
         if pos_info[8] != '0':
-            form.history_text.setText(f'{pos_info[8]}')
+            self.gui.form.history_text.setText(f'{pos_info[8]}')
         else:
-            form.history_text.clear()
+            self.gui.form.history_text.clear()
         if pos_info[10] == 'na':
-            form.na.setChecked(True)
+            self.gui.form.na.setChecked(True)
         elif pos_info[10] == 'tt':
-            form.tt.setChecked(True)
+            self.gui.form.tt.setChecked(True)
         elif pos_info[10] == 'sd':
-            form.sd.setChecked(True)
+            self.gui.form.sd.setChecked(True)
         elif pos_info[10] == 'ws':
-            form.ws.setChecked(True)
+            self.gui.form.ws.setChecked(True)
         elif pos_info[10] == 'ti':
-            form.ti.setChecked(True)
+            self.gui.form.ti.setChecked(True)
         else:
-            form.np.setChecked(True)
+            self.gui.form.np.setChecked(True)
         if pos_info[7] == 1:
-            form.do_y_n.setChecked(True)
-            form.do_salary_input.setText(f"{pos_info[8]}")
+            self.gui.form.do_y_n.setChecked(True)
+            self.gui.form.do_salary_input.setText(f"{pos_info[8]}")
         else:
-            form.do_y_n.setChecked(False)
-            form.do_salary_input.clear()
-        Actions.make_changes()
+            self.gui.form.do_y_n.setChecked(False)
+            self.gui.form.do_salary_input.clear()
+        self.make_changes()
 
-    @staticmethod
-    def make_changes():
+    def make_changes(self):
         pass
 
-    @staticmethod
-    def clear_form():
-        global search, current_position
+    def clear_form(self):
         search, current_position = [], 0
-        form.department_input.setCurrentIndex(0)
-        form.pos_input.clear()
-        form.pos_count_input.clear()
-        form.fio_input.clear()
-        form.tarif_input.clear()
-        form.salary_input.clear()
-        form.do_y_n.setChecked(False)
-        form.do_salary_input.clear()
-        form.vacancy.setChecked(False)
-        form.history_text.clear()
-        form.search_number.setText(f"Позиция : {current_position} из {len(search)}")
-        form.left_button.setEnabled(False)
-        form.right_button.setEnabled(False)
-        form.delete_button.setEnabled(False)
-        form.save_button.setEnabled(False)
+        self.gui.form.department_input.setCurrentIndex(0)
+        self.gui.form.pos_input.clear()
+        self.gui.form.pos_count_input.clear()
+        self.gui.form.fio_input.clear()
+        self.gui.form.tarif_input.clear()
+        self.gui.form.salary_input.clear()
+        self.gui.form.do_y_n.setChecked(False)
+        self.gui.form.do_salary_input.clear()
+        self.gui.form.vacancy.setChecked(False)
+        self.gui.form.history_text.clear()
+        self.gui.form.search_number.setText(f"Позиция : {current_position} из {len(search)}")
+        self.gui.form.left_button.setEnabled(False)
+        self.gui.form.right_button.setEnabled(False)
+        self.gui.form.delete_button.setEnabled(False)
+        self.gui.form.save_button.setEnabled(False)
 
-    @staticmethod
-    def delete_confirmation():
+    def delete_confirmation(self):
         global search, current_position
         message = f'Вы уверены, что хотите удалить штатную единицу "{search[current_position - 1][2]}"?'
-        reply = QtWidgets.QMessageBox.question(window, 'Удаление штатной единицы', message,
+        reply = QtWidgets.QMessageBox.question(self.gui.window, 'Удаление штатной единицы', message,
                                                QtWidgets.QMessageBox.Yes,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
@@ -116,34 +114,35 @@ class Actions:
             cursor = conn.cursor()
             cursor.execute(f"DELETE FROM salaries WHERE id = '{search[current_position - 1][0]}';")
             conn.commit()
-            Actions.clear_form()
+            self.clear_form()
 
 
 class Save_data:
-    def __init__(self):
+    def __init__(self, qtgui):
+        self.gui = qtgui
         self.con = Connection.connect()
-        self.department = form.department_input.currentText()
-        self.position = form.pos_input.text()
-        self.fio = form.fio_input.text()
-        self.tarif = form.tarif_input.text()
-        self.salary = form.salary_input.text()
-        self.pos_count = form.pos_count_input.text()
-        self.history = form.history_text.toPlainText()
-        if form.na.isChecked():
+        self.department = self.gui.form.department_input.currentText()
+        self.position = self.gui.form.pos_input.text()
+        self.fio = self.gui.form.fio_input.text()
+        self.tarif = self.gui.form.tarif_input.text()
+        self.salary = self.gui.form.salary_input.text()
+        self.pos_count = self.gui.form.pos_count_input.text()
+        self.history = self.gui.form.history_text.toPlainText()
+        if self.gui.form.na.isChecked():
             self.position_type = 'na'
-        elif form.ws.isChecked():
+        elif self.gui.form.ws.isChecked():
             self.position_type = 'ws'
-        elif form.ti.isChecked():
+        elif self.gui.form.ti.isChecked():
             self.position_type = 'ti'
-        elif form.ws.isChecked():
+        elif self.gui.form.ws.isChecked():
             self.position_type = 'ws'
-        elif form.np.isChecked():
+        elif self.gui.form.np.isChecked():
             self.position_type = 'np'
         else:
             self.position_type = 'tt'
-        if form.do_y_n.isChecked():
+        if self.gui.form.do_y_n.isChecked():
             self.decree = 1
-            self.decree_tarif = form.do_salary_input.text()
+            self.decree_tarif = gui.form.do_salary_input.text()
         else:
             self.decree = 0
             self.decree_tarif = "0"
@@ -157,14 +156,14 @@ class Save_data:
                            f"'{self.tarif}', '{self.salary}', '{self.fio}', '{self.decree}', "
                            f"'{self.history}', '{self.decree_tarif}', '{self.position_type}');")
             self.con.commit()
-            form.save_button.setEnabled(False)
+            self.gui.form.save_button.setEnabled(False)
             Save_data.save_confirmation()
         except:
             print("Ошибка записи в базу!!!")
 
     @staticmethod
     def save_confirmation():
-        msg = QtWidgets.QMessageBox(window)
+        msg = QtWidgets.QMessageBox(gui.window)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.setText("Позиция упешно добавлена в базу!")
         msg.setWindowTitle("Сохранение позиции")
@@ -174,66 +173,11 @@ class Save_data:
         pass  # TODO Сделать проверку вводимых данных на валидность
 
 
-class Buttons:
-    @staticmethod
-    def search_button():
-        global search
-        search_result = Search()
-        search = search_result.search_clicked()
-
-    @staticmethod
-    def clear_button():
-        Actions.clear_form()
-
-    @staticmethod
-    def right_button():
-        global search, current_position
-        form.left_button.setEnabled(True)
-        current_position += 1
-        form.search_number.setText(f"Позиция : {current_position} из {len(search)}")
-        if current_position >= len(search):
-            form.right_button.setEnabled(False)
-        Actions.position_output(search[current_position - 1])
-
-    @staticmethod
-    def left_button():
-        global search, current_position
-        form.right_button.setEnabled(True)
-        current_position -= 1
-        form.search_number.setText(f"Позиция : {current_position} из {len(search)}")
-        if current_position <= 1:
-            form.left_button.setEnabled(False)
-        Actions.position_output(search[current_position - 1])
-
-    @staticmethod
-    def new_position_button():
-        Actions.clear_form()
-        form.save_button.setEnabled(True)
-
-    @staticmethod
-    def delete_button():
-        Actions.delete_confirmation()
-
-    @staticmethod
-    def save_button():
-        pos_data = Save_data()
-        pos_data.save()
-
-    @staticmethod
-    def save_shtat_table_button():
-        file_name = form.save_shtat_input.text()
-        saver = Shtat_To_Excel(file_name)
-        saver.shtat_to_excel()
-
-    @staticmethod
-    def count_button():
-        Count_stimul_data()
-
-
 class Count_stimul_data:
-    def __init__(self):
-        self.fot = int(form.fot_input.text())
-        self.workdays = int(form.workday_input.text())
+    def __init__(self, qtgui):
+        self.gui = qtgui
+        self.fot = int(self.gui.form.fot_input.text())
+        self.workdays = int(self.gui.form.workday_input.text())
         self.fot_summary = FOT_summary(self.fot, self.workdays)
         self.main_data = self.fot_summary.calculate_stimul()
         self.data_list = []
@@ -248,59 +192,111 @@ class Count_stimul_data:
                                    self.main_data[v]['fot_percent']])
 
     def print_results(self):
-        form.stimul_table.setRowCount(len(self.data_list))
-        form.stimul_table.setColumnCount(8)
+
+        self.gui.stimul_table.setRowCount(len(self.data_list))
+        self.gui.stimul_table.setColumnCount(8)
+        self.gui.stimul_table.setHorizontalHeaderLabels(['Подразделение', 'ПП оклады', 'ПП стимул',
+                                                         'НП оклады', 'НП стимул',
+                                                         'Технологи оклады', 'Технологи стимул', 'Процент'])
         for i in range(0, len(self.data_list)):
             for j in range(0, 8):
                 item = QTableWidgetItem(str(self.data_list[i][j]))
-                form.stimul_table.setItem(i, j, item)
+                self.gui.form.stimul_table.setItem(i, j, item)
     # ------------ Основной код ----------------
 
 
+class Gui:
+    def __init__(self):
+
+        self.actions = Actions(self)
+        months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
+                  "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+        departments = []
+        con = Connection.connect()
+        cur = con.cursor()
+        cur.execute("SELECT DISTINCT department_code FROM salaries ORDER BY department_code;")
+        for i in cur.fetchall():
+            departments.append(str(i[0]))
+        # Определение и запуск основного окна интерфейса
+
+        Form, Window = uic.loadUiType("MainWindow.ui")
+
+        app = QApplication([])
+        self.window = Window()
+        self.form = Form()
+        self.form.setupUi(self.window)
+        self.window.show()
+
+        # Определение начальных состояний и действий кнопок
+
+        self.form.search_button.clicked.connect(self.search_button)
+        self.form.clear_form_buton.clicked.connect(self.clear_button)
+        self.form.right_button.clicked.connect(self.right_button)
+        self.form.left_button.clicked.connect(self.left_button)
+        self.form.new_position_button.clicked.connect(self.new_position_button)
+        self.form.delete_button.clicked.connect(self.delete_button)
+        self.form.save_button.clicked.connect(self.save_button)
+        self.form.save_shtat_table.clicked.connect(self.save_shtat_table_button)
+        self.form.count_button.clicked.connect(self.count_button)
+
+        self.form.left_button.setEnabled(False)
+        self.form.right_button.setEnabled(False)
+        self.form.save_button.setEnabled(False)
+        self.form.delete_button.setEnabled(False)
+        self.form.cancel_button.setEnabled(False)
+
+        self.form.month.addItems(months)
+        self.form.department_input.addItems(departments)
+        # Запуск цикла
+
+        self.search = []
+        self.current_position = 0
+        app.exec()
+
+    def search_button(self):
+        search_result = Search(self)
+        self.search = search_result.search_clicked()
+
+    def clear_button(self):
+        self.actions.clear_form()
+
+    def right_button(self):
+        self.form.left_button.setEnabled(True)
+        self.current_position += 1
+        self.form.search_number.setText(f"Позиция : {self.current_position} из {len(self.search)}")
+        if self.current_position >= len(self.search):
+            self.form.right_button.setEnabled(False)
+        self.actions.position_output(self.search[self.current_position - 1])
+
+    def left_button(self):
+        self.form.right_button.setEnabled(True)
+        self.current_position -= 1
+        self.form.search_number.setText(f"Позиция : {self.current_position} из {len(self.search)}")
+        if self.current_position <= 1:
+            self.form.left_button.setEnabled(False)
+        self.actions.position_output(self.search[self.current_position - 1])
+
+    def new_position_button(self):
+        self.actions.clear_form()
+        self.form.save_button.setEnabled(True)
+
+    def delete_button(self):
+        self.actions.delete_confirmation()
+
+    def save_button(self):
+        pos_data = Save_data(self)
+        pos_data.save()
+
+    def save_shtat_table_button(self):
+        file_name = self.form.save_shtat_input.text()
+        saver = Shtat_To_Excel(file_name)
+        saver.shtat_to_excel()
+
+    def count_button(self):
+        main_data = Count_stimul_data(self)
+        return main_data
+
+
 if __name__ == '__main__':
-    # глобальные переменные для поиска и перемотки
+    gui = Gui()
 
-    search = []
-    current_position = 1  # TODO избавиться от глобальных переменных
-    months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-              "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
-    departments = []
-    con = Connection.connect()
-    cur = con.cursor()
-    cur.execute("SELECT DISTINCT department_code FROM salaries ORDER BY department_code;")
-    for i in cur.fetchall():
-        departments.append(str(i[0]))
-
-    # Определение и запуск основного окна интерфейса
-
-    Form, Window = uic.loadUiType("MainWindow.ui")
-
-    app = QApplication([])
-    window = Window()
-    form = Form()
-    form.setupUi(window)
-    window.show()
-
-    # Определение начальных состояний и действий кнопок
-
-    form.search_button.clicked.connect(Buttons.search_button)
-    form.clear_form_buton.clicked.connect(Buttons.clear_button)
-    form.right_button.clicked.connect(Buttons.right_button)
-    form.left_button.clicked.connect(Buttons.left_button)
-    form.new_position_button.clicked.connect(Buttons.new_position_button)
-    form.delete_button.clicked.connect(Buttons.delete_button)
-    form.save_button.clicked.connect(Buttons.save_button)
-    form.save_shtat_table.clicked.connect(Buttons.save_shtat_table_button)
-    form.count_button.clicked.connect(Buttons.count_button)
-
-    form.left_button.setEnabled(False)
-    form.right_button.setEnabled(False)
-    form.save_button.setEnabled(False)
-    form.delete_button.setEnabled(False)
-    form.cancel_button.setEnabled(False)
-
-    form.month.addItems(months)
-    form.department_input.addItems(departments)
-    # Запуск цикла
-
-    app.exec()
