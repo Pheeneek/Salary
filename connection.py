@@ -1,6 +1,5 @@
 import sqlite3
 import settings
-import logging
 
 
 class Connection:
@@ -21,6 +20,5 @@ class Connection:
                     "`decree_tarif` DECIMAL NULL, "
                     "`position_type` VARCHAR(2) NOT NULL);")
         con.commit()
-        logging.warning(f"Успешное подключение к базе данных '{settings.db_name}'!")
-        return con
+        return con, cur
 
