@@ -1,12 +1,14 @@
 import os
+from pprint import pprint
+from counting.changing_stimul import Change_Stimul
 from PyQt5 import uic, QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication
 from gui.save_data import Save_data
 from gui.search import Search
-from gui.actions import Count_stimul_data
+from counting.count_stimul_data import Count_stimul_data
 from counting.shtat_to_excel import Shtat_To_Excel
 from gui.Shtat_window import Shtat
-from gui.actions import Actions
+from counting.actions import Actions
 from connection import Connection
 from counting.personel_to_excel import Personel_To_Excel
 
@@ -36,8 +38,6 @@ class Gui:
         self.form = Form()
         self.form.setupUi(self.window)
         self.window.show()
-
-        # Определение начальных состояний и действий кнопок
 
         self.form.search_button.clicked.connect(self.search_button)
         self.form.clear_form_buton.clicked.connect(self.clear_button)
@@ -205,7 +205,13 @@ class Gui:
         """
         file = self.form.file_input.text()
         if file:
-            Count_stimul_data(self, file)
+            work_stimul_data = Count_stimul_data(self, file)
+            try:
+                stimul_list = work_stimul_data.data_list
+                stimul_base = Change_Stimul(stimul_list)
+                self.form.message_label.setText("Расчет произведен!")
+            except AttributeError:
+                pass
         else:
             self.form.message_label.setText("Не выбран файл отклонений!")
 
