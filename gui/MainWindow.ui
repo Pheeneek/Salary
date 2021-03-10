@@ -573,7 +573,7 @@
         <x>10</x>
         <y>10</y>
         <width>461</width>
-        <height>281</height>
+        <height>361</height>
        </rect>
       </property>
       <property name="title">
@@ -641,17 +641,17 @@
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="stimul_label">
+      <widget class="QLabel" name="stimul_label_prk">
        <property name="geometry">
         <rect>
          <x>20</x>
          <y>180</y>
-         <width>221</width>
+         <width>241</width>
          <height>31</height>
         </rect>
        </property>
        <property name="text">
-        <string>Коэффициент стимула:</string>
+        <string>Коэффициент стимула: Пр-во</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="file_input">
@@ -684,12 +684,12 @@
         </rect>
        </property>
       </widget>
-      <widget class="QLineEdit" name="stimul_input">
+      <widget class="QLineEdit" name="stimul_input_prk">
        <property name="geometry">
         <rect>
-         <x>210</x>
+         <x>270</x>
          <y>180</y>
-         <width>231</width>
+         <width>171</width>
          <height>31</height>
         </rect>
        </property>
@@ -710,24 +710,31 @@
         <string/>
        </property>
       </widget>
-      <widget class="QCheckBox" name="use_all_fot">
+      <widget class="QLineEdit" name="stimul_input_gidr">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>230</y>
-         <width>241</width>
+         <x>270</x>
+         <y>220</y>
+         <width>171</width>
          <height>31</height>
         </rect>
        </property>
-       <property name="text">
-        <string>Использовать весь ФОТ</string>
+      </widget>
+      <widget class="QLineEdit" name="stimul_input_ptd">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>260</y>
+         <width>171</width>
+         <height>31</height>
+        </rect>
        </property>
       </widget>
       <widget class="QPushButton" name="count_button">
        <property name="geometry">
         <rect>
          <x>270</x>
-         <y>220</y>
+         <y>300</y>
          <width>171</width>
          <height>41</height>
         </rect>
@@ -736,14 +743,40 @@
         <string>Рассчитать</string>
        </property>
       </widget>
+      <widget class="QLabel" name="stimul_label_gidr">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>220</y>
+         <width>241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Коэффициент стимула: ЦРИЭГА</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="stimul_label_ptd">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>260</y>
+         <width>241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Коэффициент стимула: ПТД</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QLabel" name="message_label">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>300</y>
+        <y>390</y>
         <width>441</width>
-        <height>191</height>
+        <height>121</height>
        </rect>
       </property>
       <property name="text">

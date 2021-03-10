@@ -1,11 +1,11 @@
-from connection import Connection
+from connection.connection import Connection
 
 
 class Personel_summary:
     """
     Класс, рассчитывающий общую численность персонала по категориям
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Метод инициализации класса
         """
@@ -22,7 +22,7 @@ class Personel_summary:
         self.cur.execute("SELECT * FROM salaries")
         return self.cur.fetchall()
 
-    def get_department_dict(self):
+    def get_department_dict(self) -> None:
         """
         Метод создает словарь с ключами - названиями подразделений
         :return: None

@@ -1,19 +1,19 @@
 from PyQt5 import QtWidgets
-from connection import Connection
+from connection.connection import Connection
 
 
 class Actions:
     """
     Класс действия. Экземпляр класса создается при запуске злавного окна приложения
     """
-    def __init__(self, qtgui):
+    def __init__(self, qtgui: any) -> None:
         """
         Метод init класса
         :param qtgui: экземпляр класса TkGUI (отрисовки основного окна)
         """
         self.gui = qtgui
 
-    def position_output(self, pos_info):
+    def position_output(self, pos_info: list) -> None:
         """
         Метод заполнения форм вкладки "Работа со штатным расписанием"
         :param pos_info: список с данными сотрудника
@@ -51,7 +51,7 @@ class Actions:
     def make_changes(self):
         pass  # TODO доделать изменения
 
-    def clear_form(self):
+    def clear_form(self) -> None:
         """
         Метод, очищающий формы ввода на вкладке "Работа со штатным расписанием"
         :return: None
@@ -72,7 +72,7 @@ class Actions:
         self.gui.form.delete_button.setEnabled(False)
         self.gui.form.save_button.setEnabled(False)
 
-    def delete_confirmation(self):
+    def delete_confirmation(self) -> None:
         """
         Метод, запускающий окно подтверждения удаления текущей позиции из штатного расписания
         :return: None

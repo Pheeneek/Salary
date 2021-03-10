@@ -1,6 +1,6 @@
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
-from connection import Connection
+from connection.connection import Connection
 
 
 class Shtat_To_Excel:

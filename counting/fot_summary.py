@@ -1,13 +1,12 @@
-from connection import Connection
+from connection.connection import Connection
 from counting.get_outs import Read_Outs
 
 
 class FOT_summary:
     """
-    Класс расчета размера стимулирующих надбавок и вывода результата в Table_View
+    Класс расчета размера стимулирующих надбавок
     """
-
-    def __init__(self, qtgui, fot, workdays, file):
+    def __init__(self, qtgui: any, fot: int, workdays: int, file: str) -> None:
         """
         Метод инициализации класса
         :param fot: Величина ФОТ к распределению
@@ -30,7 +29,7 @@ class FOT_summary:
         for i in self.outs_list:
             self.outs[i[0]] = [i[4], i[5], i[6]]
 
-    def get_shtat_data(self):
+    def get_shtat_data(self) -> list:
         """
         Метод обращается к БД и получает список работающих (без вакансий и начальников)
         :return: self.cursor.fetchall() - список с данными работников
@@ -39,7 +38,7 @@ class FOT_summary:
                             f"AND (position_type NOT LIKE '%na%')")
         return self.cursor.fetchall()
 
-    def get_department_dict(self):
+    def get_department_dict(self) -> None:
         """
         Метод создает шаблон словаря для обобщения данных по подразделениям
         :return: None
@@ -53,7 +52,7 @@ class FOT_summary:
                                   "tt_oklad": 0, "tt_stimul": 0,
                                   "fot_percent": 0}
 
-    def calculate_oklads(self):
+    def calculate_oklads(self) -> None:
         """
         Метод, суммирующий окладную часть по подразделениям и добавляющий данные в словарь
         :return: None
@@ -68,7 +67,7 @@ class FOT_summary:
             else:
                 self.calculated[i[1]]["tt_oklad"] += float(round(i[5], 0))
 
-    def real_oklad_counting(self):
+    def real_oklad_counting(self) -> None:
         """
         Метод расчитывает реальные оклады сотрудников с учетом отклонений
         и сохраняет их в список self.data
@@ -80,35 +79,58 @@ class FOT_summary:
             else:
                 salary = i[5]
             try:
-                salary = round(salary / self.workdays * (self.workdays - self.outs[i[0]][0]
-                                                         - self.outs[i[0]][1] - self.outs[i[0]][2]), 2)
+                salary = round(salary / self.workdays * (self.workdays - self.outs[i[0]][0] -
+                                                         self.outs[i[0]][1] - self.outs[i[0]][2]), 2)
                 i[5] = salary
-            except NameError:
+            except (NameError, KeyError, TypeError):
                 pass
 
-    def calculate_percent(self) -> float:
+    def calculate_percent(self) -> [float, float]:
         """
         Метод, расчитывающий коэффициент стимула для производственного персонала
         :return: fot_percent коэффициент стимула
         """
-        summa = 0
+        summa_oklad = 0
         for i, v in enumerate(self.calculated):
-            summa += self.calculated[v]['pp_oklad']
-            summa += self.calculated[v]['tt_oklad']
-        fot_percent = round(self.fot / summa - 1, 2)
-        return fot_percent
+            summa_oklad += self.calculated[v]['pp_oklad']
+            summa_oklad += self.calculated[v]['tt_oklad']
+        fot_percent = round(self.fot / summa_oklad - 1, 2)
+        return fot_percent, summa_oklad
 
-    def calculate_stimul(self) -> dict:
+    def calculate_stimul(self) -> [dict, float]:
         """
         Метод рассчитывает стимулирующую часть ФОТ и записывает результат для
-        каждого подразделения в словарь
+        каждого подразделения в словарь. Если процент стимула указан явно - использует его,
+        иначе использует общий процент
         :return: self.calculated - словарь с данными по ФОТ
         """
         self.calculate_oklads()
-        stimul_percent = self.calculate_percent()
+        stimul_percent, summa = self.calculate_percent()
         for num, dep in enumerate(self.calculated):
-            self.calculated[dep]['pp_stimul'] = round(self.calculated[dep]['pp_oklad'] * stimul_percent, 0)
-            self.calculated[dep]['np_stimul'] = round(self.calculated[dep]['np_oklad'] * stimul_percent, 0)
-            self.calculated[dep]['tt_stimul'] = round(self.calculated[dep]['tt_oklad'] * stimul_percent, 0)
-            self.calculated[dep]['fot_percent'] = stimul_percent
-        return self.calculated
+            if dep == 18000:
+                if self.gui.form.stimul_input_gidr.text():
+                    self.calculated[dep]['fot_percent'] = float(str(self.gui.form.stimul_input_gidr.text())
+                                                                .replace(",", "."))
+                else:
+                    self.calculated[dep]['fot_percent'] = stimul_percent
+            elif dep == 33600:
+                if self.gui.form.stimul_input_ptd.text():
+                    self.calculated[dep]['fot_percent'] = float(str(self.gui.form.stimul_input_ptd.text())
+                                                                .replace(",", "."))
+                else:
+                    self.calculated[dep]['fot_percent'] = stimul_percent
+            else:
+                if self.gui.form.stimul_input_prk.text():
+                    self.calculated[dep]['fot_percent'] = float(str(self.gui.form.stimul_input_prk.text())
+                                                                .replace(",", "."))
+                else:
+                    self.calculated[dep]['fot_percent'] = stimul_percent
+            self.calculated[dep]['pp_stimul'] = round(self.calculated[dep]['pp_oklad'] *
+                                                      self.calculated[dep]['fot_percent'], 0)
+            self.calculated[dep]['np_stimul'] = round(self.calculated[dep]['np_oklad'] *
+                                                      self.calculated[dep]['fot_percent'], 0)
+            self.calculated[dep]['tt_stimul'] = round(self.calculated[dep]['tt_oklad'] *
+                                                      self.calculated[dep]['fot_percent'], 0)
+            summa += self.calculated[dep]['tt_stimul']
+            summa += self.calculated[dep]['pp_stimul']
+        return self.calculated, summa

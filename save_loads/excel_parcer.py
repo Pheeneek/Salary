@@ -1,5 +1,5 @@
 from pandas import read_excel
-from connection import Connection
+from connection.connection import Connection
 import settings
 
 
@@ -7,7 +7,7 @@ class Shtat_Excel_To_DB:
     """
     Вспомогательный класс для загрузки данных сотрудников из файла формата Excel в БД
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Метод инициализации класса. Считывает данные из файла, указанного в settings,
         переводит в формат списка
@@ -15,7 +15,7 @@ class Shtat_Excel_To_DB:
         read = read_excel(settings.parcing_file)
         self.res = read.values.tolist()
 
-    def loader(self):
+    def loader(self) -> None:
         """
         Метод непосредственно построчно записывает данные каждого сотрудника в БД
         :return: None

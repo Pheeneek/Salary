@@ -14,7 +14,7 @@ class Shtat(QMainWindow):
     con = QSqlDatabase.addDatabase('QSQLITE')
     con.setDatabaseName(settings.db_name)
 
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: any = None) -> None:
         """
         Функция инициализации окна штатного расписания
         :param parent: Родительский виджет (окно)
@@ -97,7 +97,7 @@ class Shtat(QMainWindow):
         self.filter_combo_box.addItems(self.filters)
         self.filter_button.clicked.connect(self.use_filter_button)
 
-    def use_filter_button(self):
+    def use_filter_button(self) -> None:
         """
         Функция кнопки "Поиск". Считывает паттерн из поля фильтра и применяет его к столбцу,
         выбранного в комбо-боксе фильтра

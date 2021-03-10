@@ -9,7 +9,7 @@ class Personel_To_Excel:
     Класс для выгрузки таблицы со штатной численности в файл Excel
     """
 
-    def __init__(self, file, qtgui):
+    def __init__(self, file: str, qtgui: any) -> None:
         """
         Метод инициализации класса
         :param file: файл для выгрузки
@@ -59,7 +59,7 @@ class Personel_To_Excel:
         self.ws = self.wb.active
         self.ws.title = 'Численность'
 
-    def personel_to_excel(self):
+    def personel_to_excel(self) -> None:
         """
         Метод выгрузки численности в файл
         :return: None
@@ -130,9 +130,11 @@ class Personel_To_Excel:
         except PermissionError:
             self.save_confirmation("Не удалось сохранить файл!", "Ошибка!")
 
-    def save_confirmation(self, text, title):
+    def save_confirmation(self, text: str, title: str) -> None:
         """
         Метод, запускающий информационное окно c результатом записи файла
+        :param text: текст сообщения
+        :param title: Название окна
         :return: None
         """
         msg = QtWidgets.QMessageBox(self.gui.window)

@@ -1,4 +1,4 @@
-from connection import Connection
+from connection.connection import Connection
 
 
 class Search:
@@ -6,7 +6,7 @@ class Search:
     Класс, реализующий поиск
     """
 
-    def __init__(self, qtgui):
+    def __init__(self, qtgui: any) -> None:
         """
         Метод init класса
         :param qtgui: экземпляр класса TkGUI (отрисовки основного окна)
@@ -32,7 +32,7 @@ class Search:
         except NameError:
             pass
 
-    def search_clicked(self):
+    def search_clicked(self) -> list:
         """
         Метод, обрабатывающий результат поиска, настраивает кнопки, выводит количество
         найденных позиций и выводит первое значение в формы окна.

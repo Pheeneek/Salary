@@ -1,12 +1,12 @@
 from PyQt5 import QtWidgets
-from connection import Connection
+from connection.connection import Connection
 
 
 class Save_data:
     """
     Класс сохранения данных сотрудника в БД
     """
-    def __init__(self, qtgui):
+    def __init__(self, qtgui: any) -> None:
         """
         Метод init класса. Считывает данные из полей ввода
         :param qtgui: экземпляр класса TkGUI (отрисовки основного окна)
@@ -39,7 +39,7 @@ class Save_data:
             self.decree = 0
             self.decree_tarif = "0"
 
-    def save(self):
+    def save(self) -> None:
         """
         Метод, осуществляющий попытку записи данных сотрудников в БД
         :return: None
@@ -57,7 +57,7 @@ class Save_data:
             except NameError:
                 print("Ошибка записи в базу!!!")
 
-    def save_confirmation(self):
+    def save_confirmation(self) -> None:
         """
         Метод, запускающий информационное окно, если позиция удачно записана в базу
         :return: None
@@ -68,7 +68,7 @@ class Save_data:
         msg.setWindowTitle("Сохранение позиции")
         msg.exec()
 
-    def verify_data(self):
+    def verify_data(self) -> bool:
         """
         Метод, запускающий проверки числовых значений на валидность
         :return: True, если проверки пройдены
@@ -82,7 +82,7 @@ class Save_data:
         else:
             return False
 
-    def verify_ints(self, value):
+    def verify_ints(self, value: str) -> bool:
         """
         Метод проверки значения на неотрицательность и что оно является числом
         :param value: проверяемое значение

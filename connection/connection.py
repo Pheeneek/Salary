@@ -21,4 +21,3 @@ class Connection:
                     "`position_type` VARCHAR(2) NOT NULL);")
         con.commit()
         return con, cur
-

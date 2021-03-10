@@ -8,7 +8,7 @@ class Count_stimul_data:
     Класс расчета стимула и выводящий результаты расчета в Table_View
     """
 
-    def __init__(self, qtgui, file):
+    def __init__(self, qtgui: any, file: str) -> None:
         """
         Метод init класса
         :param qtgui: экземпляр класса TkGUI (отрисовки основного окна)
@@ -20,12 +20,12 @@ class Count_stimul_data:
             self.fot = int(self.gui.form.fot_input.text())
             self.workdays = int(self.gui.form.workday_input.text())
             self.fot_summary = FOT_summary(self.gui, self.fot, self.workdays, self.file)
-            self.main_data = self.fot_summary.calculate_stimul()
+            self.main_data, self.summa = self.fot_summary.calculate_stimul()
             self.data_list = []
             self.stimul_to_list()
             self.print_results()
 
-    def stimul_to_list(self):
+    def stimul_to_list(self) -> None:
         """
         Метод переводит данные по подразделениям из словаря в сортированный список
         для дальнейшего вывода в Table_View
@@ -38,7 +38,7 @@ class Count_stimul_data:
                                    self.main_data[v]['fot_percent']])
         self.data_list.sort()
 
-    def print_results(self):
+    def print_results(self) -> None:
         """
         Метод вывода результатов расчетов в Table_View
         :return: None
@@ -54,7 +54,7 @@ class Count_stimul_data:
                 self.gui.form.stimul_table.setItem(i, j, item)
         self.gui.form.stimul_table.resizeColumnsToContents()
 
-    def verify_counting_data(self):
+    def verify_counting_data(self) -> bool:
         """
          Метод, запускающий проверки на валидность данных для расчета
          :return: True, если проверки пройдены
@@ -67,7 +67,7 @@ class Count_stimul_data:
         else:
             return False
 
-    def verify_ints(self, value):
+    def verify_ints(self, value: str) -> bool:
         """
         Метод проверки значения на неотрицательность и что оно является числом
         :param value: проверяемое значение
@@ -84,7 +84,7 @@ class Count_stimul_data:
             return False
         return True
 
-    def verify_path(self):
+    def verify_path(self) -> bool:
         """
         Метод проверяет наличие пути, указанного в полу file_input
         :return: True, если путь существует
