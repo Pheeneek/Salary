@@ -2,11 +2,11 @@
 Файл с классом запуска расчета и вывода таблицы с результатами
 """
 import os
-from counting.fot_summary import FOT_summary
+from counting.fot_summary import FOTSummary
 from PyQt5.QtWidgets import QTableWidgetItem
 
 
-class Count_stimul_data:
+class CountStimulData:
     """
     Класс расчета стимула и выводящий результаты расчета в Table_View
     """
@@ -22,7 +22,7 @@ class Count_stimul_data:
         if self.verify_counting_data():
             self.fot = int(self.gui.form.fot_input.text())
             self.workdays = int(self.gui.form.workday_input.text())
-            self.fot_summary = FOT_summary(self.gui, self.fot, self.workdays, self.file)
+            self.fot_summary = FOTSummary(self.gui, self.fot, self.workdays, self.file)
             self.main_data, self.summa = self.fot_summary.calculate_stimul()
             self.data_list = []
             self.stimul_to_list()

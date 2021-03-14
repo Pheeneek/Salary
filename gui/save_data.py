@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets
 from connection.connection import Connection
 
 
-class Save_data:
+class SaveData:
     """
     Класс сохранения данных сотрудника в БД
     """

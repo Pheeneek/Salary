@@ -5,7 +5,7 @@
 from connection.connection import Connection
 
 
-class Personel_summary:
+class PersonelSummary:
     """
     Класс, рассчитывающий общую численность персонала по категориям
     """

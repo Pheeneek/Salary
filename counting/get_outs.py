@@ -4,7 +4,7 @@
 from pandas import read_excel
 
 
-class Read_Outs:
+class ReadOuts:
     """
     Класс, считывающий данные отклонений из файла формата Excel
     """

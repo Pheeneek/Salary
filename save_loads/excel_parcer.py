@@ -6,7 +6,7 @@ from connection.connection import Connection
 import settings
 
 
-class Shtat_Excel_To_DB:
+class ShtatExcelToDB:
     """
     Вспомогательный класс для загрузки данных сотрудников из файла формата Excel в БД
     """
@@ -34,6 +34,6 @@ class Shtat_Excel_To_DB:
 
 
 if __name__ == '__main__':
-    execute = Shtat_Excel_To_DB()
+    execute = ShtatExcelToDB()
     execute.loader()
 

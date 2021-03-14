@@ -53,9 +53,6 @@ class Actions:
             self.gui.form.do_y_n.setChecked(False)
             self.gui.form.do_salary_input.clear()
 
-    def make_changes(self):
-        pass  # TODO доделать изменения
-
     def clear_form(self) -> None:
         """
         Метод, очищающий формы ввода на вкладке "Работа со штатным расписанием"
@@ -80,7 +77,7 @@ class Actions:
     def clear_stimul_form(self):
         self.gui.form.stimul_table.setRowCount(0)
         self.gui.form.message_label.clear()
-        self.gui.save_stimul_table_button.setEnabled(False)
+        self.gui.form.save_stimul_table_button.setEnabled(False)
 
     def delete_confirmation(self) -> None:
         """

@@ -3,10 +3,10 @@
 """
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
-from counting.personel_summary import Personel_summary
+from counting.personel_summary import PersonelSummary
 
 
-class Personel_To_Excel:
+class PersonelToExcel:
     """
     Класс для выгрузки таблицы со штатной численности в файл Excel
     """
@@ -19,7 +19,7 @@ class Personel_To_Excel:
         """
         self.gui = qtgui
         self.file = file
-        self.work_data = Personel_summary()
+        self.work_data = PersonelSummary()
         self.data = self.work_data.data_counting()
         self.rows = []
         self.fill = PatternFill(fill_type='solid',
@@ -131,5 +131,3 @@ class Personel_To_Excel:
             self.gui.actions.save_confirmation("Файл отклонений успешно сохранен", "Успех!")
         except PermissionError:
             self.gui.actions.save_confirmation("Не удалось сохранить файл!", "Ошибка!")
-
-

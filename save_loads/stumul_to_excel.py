@@ -5,7 +5,7 @@ from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
 
 
-class Stimul_To_Excel:
+class StimulToExcel:
     """
      Класс, выгружающий таблицу с расчетом стимула в файл Excel для заполнения отклонений
      """

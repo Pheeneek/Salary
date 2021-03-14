@@ -5,14 +5,14 @@
 import os
 from PyQt5 import uic, QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication
-from gui.save_data import Save_data
+from gui.save_data import SaveData
 from gui.search import Search
 from gui.Shtat_window import Shtat
 from gui.actions import Actions
-from counting.count_stimul_data import Count_stimul_data
-from save_loads.shtat_to_excel import Shtat_To_Excel
-from save_loads.personel_to_excel import Personel_To_Excel
-from save_loads.stumul_to_excel import Stimul_To_Excel
+from counting.count_stimul_data import CountStimulData
+from save_loads.shtat_to_excel import ShtatToExcel
+from save_loads.personel_to_excel import PersonelToExcel
+from save_loads.stumul_to_excel import StimulToExcel
 
 
 class Gui:
@@ -75,9 +75,9 @@ class Gui:
     def save_personel_button(self) -> None:
         file = QtWidgets.QFileDialog.getSaveFileName()[0]
         if file.endswith(".xlsx") or file.endswith(".xls"):
-            saver = Personel_To_Excel(file, self)
+            saver = PersonelToExcel(file, self)
         else:
-            saver = Personel_To_Excel(f"{file}.xlsx", self)
+            saver = PersonelToExcel(f"{file}.xlsx", self)
         saver.personel_to_excel()
 
     def file_button(self) -> None:
@@ -181,7 +181,7 @@ class Gui:
         метод save класса
         :return: None
         """
-        pos_data = Save_data(self)
+        pos_data = SaveData(self)
         pos_data.save()
 
     @staticmethod
@@ -192,7 +192,7 @@ class Gui:
         :return: None
         """
         file = QtWidgets.QFileDialog.getSaveFileName()[0]
-        saver = Shtat_To_Excel(f"{file}.xlsx")
+        saver = ShtatToExcel(f"{file}.xlsx")
         saver.shtat_to_excel()
 
     def count_button(self) -> None:
@@ -202,7 +202,7 @@ class Gui:
         """
         file = self.form.file_input.text()
         if file:
-            work_stimul_data = Count_stimul_data(self, file)
+            work_stimul_data = CountStimulData(self, file)
             try:
                 summa = work_stimul_data.summa
                 self.form.message_label.setText(f"Расчет произведен! Использовано ФОТ: {summa}!")
@@ -229,7 +229,7 @@ class Gui:
         :return: None
         """
         file = QtWidgets.QFileDialog.getSaveFileName()[0]
-        saver = Stimul_To_Excel(self, self.stimul_data, f"{file}.xlsx")
+        saver = StimulToExcel(self, self.stimul_data, f"{file}.xlsx")
         saver.stimul_to_excel()
 
     def clear_stimul_button(self) -> None:

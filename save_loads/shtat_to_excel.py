@@ -6,7 +6,7 @@ from openpyxl.styles import PatternFill, Border, Alignment, Side
 from connection.connection import Connection
 
 
-class Shtat_To_Excel:
+class ShtatToExcel:
     """
     Класс, выгружающий штатное расписание в файл Excel для заполнения отклонений
     """

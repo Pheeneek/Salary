@@ -2,10 +2,10 @@
 Файл с классом, непосредственно расчитывающим стимул с учетом отклонений
 """
 from connection.connection import Connection
-from counting.get_outs import Read_Outs
+from counting.get_outs import ReadOuts
 
 
-class FOT_summary:
+class FOTSummary:
     """
     Класс расчета размера стимулирующих надбавок
     """
@@ -26,7 +26,7 @@ class FOT_summary:
             self.data[i] = list(self.data[i])
         self.code_list = []
         self.calculated = {}
-        outs = Read_Outs(self.file)
+        outs = ReadOuts(self.file)
         self.outs_list = outs.loader()
         self.outs = {}
         for i in self.outs_list:
