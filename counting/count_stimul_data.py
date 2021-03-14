@@ -1,3 +1,6 @@
+"""
+Файл с классом запуска расчета и вывода таблицы с результатами
+"""
 import os
 from counting.fot_summary import FOT_summary
 from PyQt5.QtWidgets import QTableWidgetItem
@@ -44,10 +47,6 @@ class Count_stimul_data:
         :return: None
         """
         self.gui.form.stimul_table.setRowCount(len(self.data_list))
-        self.gui.form.stimul_table.setColumnCount(8)
-        self.gui.form.stimul_table.setHorizontalHeaderLabels(['Подразделение', 'ПП оклады', 'ПП стимул',
-                                                              'НП оклады', 'НП стимул',
-                                                              'Технологи оклады', 'Технологи стимул', 'Процент'])
         for i in range(0, len(self.data_list)):
             for j in range(0, 8):
                 item = QTableWidgetItem(str(self.data_list[i][j]))

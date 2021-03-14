@@ -1,3 +1,6 @@
+"""
+Файл с классом, считывающим отклонения с файла Excel
+"""
 from pandas import read_excel
 
 

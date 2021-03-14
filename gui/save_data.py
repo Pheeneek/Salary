@@ -1,3 +1,6 @@
+"""
+Класс, реализующий сохранение новой позиции в БД
+"""
 from PyQt5 import QtWidgets
 from connection.connection import Connection
 
@@ -13,7 +16,7 @@ class Save_data:
         """
         self.gui = qtgui
         self.con, self.cursor = Connection.connect()
-        self.department = self.gui.form.department_input.currentText()
+        self.department = self.gui.form.department_input.text()
         self.position = self.gui.form.pos_input.text()
         self.fio = self.gui.form.fio_input.text()
         self.tarif = self.gui.form.tarif_input.text()

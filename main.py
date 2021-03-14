@@ -1,3 +1,6 @@
+"""
+Файл запуска приложения
+"""
 from gui.MainWindow import Gui
 
 

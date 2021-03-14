@@ -1,3 +1,6 @@
+"""
+Файл с вспомогательным классом, реализующим перенос штатного расписания в БД из формата Excel
+"""
 from pandas import read_excel
 from connection.connection import Connection
 import settings

@@ -1,3 +1,7 @@
+"""
+Файл с классом отрисовки основного окна и функциями кнопок
+"""
+
 import os
 from PyQt5 import uic, QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication
@@ -6,9 +10,9 @@ from gui.search import Search
 from gui.Shtat_window import Shtat
 from gui.actions import Actions
 from counting.count_stimul_data import Count_stimul_data
-from connection.connection import Connection
 from save_loads.shtat_to_excel import Shtat_To_Excel
 from save_loads.personel_to_excel import Personel_To_Excel
+from save_loads.stumul_to_excel import Stimul_To_Excel
 
 
 class Gui:
@@ -21,14 +25,6 @@ class Gui:
         Инициализация экземпляра класса
         """
         self.actions = Actions(self)
-        months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-                  "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
-        departments = []
-        con, cur = Connection.connect()
-        cur.execute("SELECT DISTINCT department_code FROM salaries ORDER BY department_code;")
-        for i in cur.fetchall():
-            departments.append(str(i[0]))
-
         Form, Window = uic.loadUiType("gui/MainWindow.ui")
 
         app = QApplication([])
@@ -51,8 +47,12 @@ class Gui:
         self.form.file_button.clicked.connect(self.file_button)
         self.form.save_shtat_table_button.clicked.connect(self.save_shtat_table_button)
         self.form.save_stimul_table_button.clicked.connect(self.save_stimul_table_button)
-        self.form.print_sheets_button.clicked.connect(self.print_sheets_button)
         self.form.save_personel_button.clicked.connect(self.save_personel_button)
+        self.form.clear_stimul.clicked.connect(self.clear_stimul_button)
+        self.form.stimul_table.setColumnCount(8)
+        self.form.stimul_table.setHorizontalHeaderLabels(['Подразделение', 'ПП оклады', 'ПП стимул',
+                                                          'НП оклады', 'НП стимул',
+                                                          'Технологи оклады', 'Технологи стимул', 'Процент'])
         dirpath = os.path.dirname(os.path.abspath(__file__))
         icon_path = os.path.join(dirpath, "folder.png")
         icon = QtGui.QIcon(icon_path)
@@ -65,12 +65,11 @@ class Gui:
         self.form.left_button_max.setEnabled(False)
         self.form.right_button_max.setEnabled(False)
         self.form.right_button_max.setEnabled(False)
-
-        self.form.month.addItems(months)
-        self.form.department_input.addItems(departments)
+        self.form.save_stimul_table_button.setEnabled(False)
 
         self.search = []
         self.current_position = 1
+        self.stimul_data = []
         app.exec()
 
     def save_personel_button(self) -> None:
@@ -204,10 +203,11 @@ class Gui:
         file = self.form.file_input.text()
         if file:
             work_stimul_data = Count_stimul_data(self, file)
-
             try:
                 summa = work_stimul_data.summa
                 self.form.message_label.setText(f"Расчет произведен! Использовано ФОТ: {summa}!")
+                self.form.save_stimul_table_button.setEnabled(True)
+                self.stimul_data = work_stimul_data.data_list
             except AttributeError:
                 pass
         else:
@@ -222,8 +222,19 @@ class Gui:
         Work_shtat = Shtat(self.window)
         Work_shtat.show()
 
-    def save_stimul_table_button(self):
-        pass  # TODO Сделать выгрузку
+    def save_stimul_table_button(self) -> None:
+        """
+        Метод кнопки "Сохранить стимул". Считывает имя файла и сохраняет
+        данные текущего расчета стимула в формате Excel для заполнения отклонений.
+        :return: None
+        """
+        file = QtWidgets.QFileDialog.getSaveFileName()[0]
+        saver = Stimul_To_Excel(self, self.stimul_data, f"{file}.xlsx")
+        saver.stimul_to_excel()
 
-    def print_sheets_button(self):
-        pass  # TODO Сделать печать
+    def clear_stimul_button(self) -> None:
+        """
+        Метод кнопки очистки QTableWidget с данными расчета стимула
+        :return: None
+        """
+        self.actions.clear_stimul_form()

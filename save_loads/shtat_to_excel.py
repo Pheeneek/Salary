@@ -1,3 +1,6 @@
+"""
+Файл с классом, реализующим выгрузку штатного расписаниея в файл Excel
+"""
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
 from connection.connection import Connection

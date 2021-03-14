@@ -185,7 +185,7 @@
         <string>Ставка</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="department_input">
+      <widget class="QLineEdit" name="department_input">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -605,19 +605,6 @@
         <string>Файл отклонений:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="month_label">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>100</y>
-         <width>181</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Месяц:</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="work_days_label">
        <property name="geometry">
         <rect>
@@ -629,16 +616,6 @@
        </property>
        <property name="text">
         <string>Количество рабочих дней:</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="month">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>100</y>
-         <width>231</width>
-         <height>31</height>
-        </rect>
        </property>
       </widget>
       <widget class="QLabel" name="stimul_label_prk">
@@ -769,6 +746,19 @@
         <string>Коэффициент стимула: ПТД</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="clear_stimul">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>300</y>
+         <width>201</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Очистить форму</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QLabel" name="message_label">
       <property name="geometry">
@@ -790,26 +780,13 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>520</y>
-        <width>441</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Выгрузить в файл</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="print_sheets_button">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
         <y>580</y>
         <width>441</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Напечатать листочки</string>
+       <string>Выгрузить в файл</string>
       </property>
      </widget>
     </widget>

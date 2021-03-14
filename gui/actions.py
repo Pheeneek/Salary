@@ -1,3 +1,8 @@
+"""
+Файл с классом, реализующим вспомогательные действия (удаление, вывод данных в форму,
+вывод окна с подтверждением выгрузки в файл, очистка форм)
+"""
+
 from PyQt5 import QtWidgets
 from connection.connection import Connection
 
@@ -19,7 +24,7 @@ class Actions:
         :param pos_info: список с данными сотрудника
         :return: None
         """
-        self.gui.form.department_input.setCurrentText(f'{pos_info[1]}')
+        self.gui.form.department_input.setText(f'{pos_info[1]}')
         self.gui.form.pos_input.setText(f'{pos_info[2]}')
         self.gui.form.pos_count_input.setText(f'{pos_info[3]}')
         self.gui.form.fio_input.setText(f'{pos_info[6]}')
@@ -56,7 +61,7 @@ class Actions:
         Метод, очищающий формы ввода на вкладке "Работа со штатным расписанием"
         :return: None
         """
-        self.gui.form.department_input.setCurrentIndex(0)
+        self.gui.form.department_input.clear()
         self.gui.form.pos_input.clear()
         self.gui.form.pos_count_input.clear()
         self.gui.form.fio_input.clear()
@@ -71,6 +76,11 @@ class Actions:
         self.gui.form.right_button.setEnabled(False)
         self.gui.form.delete_button.setEnabled(False)
         self.gui.form.save_button.setEnabled(False)
+
+    def clear_stimul_form(self):
+        self.gui.form.stimul_table.setRowCount(0)
+        self.gui.form.message_label.clear()
+        self.gui.save_stimul_table_button.setEnabled(False)
 
     def delete_confirmation(self) -> None:
         """
@@ -87,3 +97,16 @@ class Actions:
             cursor.execute(f"DELETE FROM salaries WHERE id = '{self.gui.search[self.gui.current_position - 1][0]}';")
             conn.commit()
             self.clear_form()
+
+    def save_confirmation(self, text: str, title: str) -> None:
+        """
+        Метод, запускающий информационное окно c результатом записи файла
+        :param text: текст сообщения
+        :param title: Название окна
+        :return: None
+        """
+        msg = QtWidgets.QMessageBox(self.gui.window)
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setText(text)
+        msg.setWindowTitle(title)
+        msg.exec()

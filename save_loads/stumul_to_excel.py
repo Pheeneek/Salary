@@ -1,26 +1,19 @@
 """
-Файл с классом, реализующим выгрузку таблицы штатной численности в файл Excel
+Файл с классом, реализующим выгрузку таблицы с расчетом стимула в файл Excel
 """
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
-from counting.personel_summary import Personel_summary
 
 
-class Personel_To_Excel:
+class Stimul_To_Excel:
     """
-    Класс для выгрузки таблицы со штатной численности в файл Excel
-    """
+     Класс, выгружающий таблицу с расчетом стимула в файл Excel для заполнения отклонений
+     """
 
-    def __init__(self, file: str, qtgui: any) -> None:
-        """
-        Метод инициализации класса
-        :param file: файл для выгрузки
-        :param qtgui: экземпляр класса основного окна
-        """
-        self.gui = qtgui
+    def __init__(self, gui, stimul_data, file):
+        self.gui = gui
+        self.stimul_data = stimul_data
         self.file = file
-        self.work_data = Personel_summary()
-        self.data = self.work_data.data_counting()
         self.rows = []
         self.fill = PatternFill(fill_type='solid',
                                 start_color='c1c1c1',
@@ -59,41 +52,20 @@ class Personel_To_Excel:
 
         self.wb = Workbook()
         self.ws = self.wb.active
-        self.ws.title = 'Численность'
+        self.ws.title = 'Распределение стимула'
 
-    def personel_to_excel(self) -> None:
+    def stimul_to_excel(self) -> None:
         """
-        Метод выгрузки численности в файл
+        Метод выгрузки стимула в файл
         :return: None
         """
         self.ws.cell(row=4, column=1)
-        self.rows.append(["Подразделения",
-                          "Код",
-                          "Производственный персонал", "", "",
-                          "ПП Всего", "Непроизводственный персонал", "", "НП Всего", "ППП"])
-        self.rows.append(["", "", "Сдельщики", "На окладах", "Технологи",
-                          "Всего", "Специалисты", "Вспомогательные рабочие",
-                          "Всего"])
-        current_row = 7
-        for i in self.data:
-            self.rows.append(["", i, self.data[i]['pp']['sdelka'],
-                              self.data[i]['pp']['vremya'],
-                              self.data[i]['pp']['tech'],
-                              self.data[i]['pp']['summary'],
-                              self.data[i]['np']['specialist'],
-                              self.data[i]['np']['worker'],
-                              self.data[i]['np']['summary'],
-                              f"=F{current_row}+I{current_row}"])
-            current_row += 1
-        current_row -= 1
-        self.rows.append(["", "", f"=SUM(C7:C{current_row})",
-                          f"=SUM(D7:D{current_row})",
-                          f"=SUM(E7:E{current_row})",
-                          f"=SUM(F7:F{current_row})",
-                          f"=SUM(G7:G{current_row})",
-                          f"=SUM(H7:H{current_row})",
-                          f"=SUM(I7:I{current_row})",
-                          f"=SUM(J7:J{current_row})"])
+        self.rows.append(['Подразделение', 'ПП оклады', 'ПП стимул',
+                          'НП оклады', 'НП стимул',
+                          'Технологи оклады', 'Технологи стимул', 'Процент'])
+        for i in self.stimul_data:
+            self.rows.append(i)
+
         for row in self.rows:
             self.ws.append(row)
 
@@ -118,18 +90,9 @@ class Personel_To_Excel:
         for cellObj in self.ws[f'A4:{chr(64 + self.ws.max_column)}{self.ws.max_row}']:
             for cell in cellObj:
                 self.ws[cell.coordinate].alignment = self.align_left
-        self.ws.merge_cells("C5:E5")
-        self.ws.merge_cells("G5:H5")
-        self.ws.merge_cells("A5:A6")
-        self.ws.merge_cells("B5:B6")
-        self.ws.merge_cells("F5:F6")
-        self.ws.merge_cells("I5:I6")
-        self.ws.merge_cells("J5:J6")
 
         try:
             self.wb.save(self.file)
-            self.gui.actions.save_confirmation("Файл отклонений успешно сохранен", "Успех!")
+            self.gui.actions.save_confirmation("Файл стимула успешно сохранен", "Успех!")
         except PermissionError:
             self.gui.actions.save_confirmation("Не удалось сохранить файл!", "Ошибка!")
-
-

@@ -1,3 +1,6 @@
+"""
+Файл с классом, реализующим поиск в БД по паттернам
+"""
 from connection.connection import Connection
 
 
@@ -14,7 +17,7 @@ class Search:
         self.gui = qtgui
         self.search, self.current_position = [], 0
         self.con, self.cursor = Connection.connect()
-        self.department = self.gui.form.department_input.currentText()
+        self.department = self.gui.form.department_input.text()
         self.position = self.gui.form.pos_input.text()
         self.fio = self.gui.form.fio_input.text()
         self.tarif = self.gui.form.tarif_input.text()

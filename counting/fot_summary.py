@@ -1,3 +1,6 @@
+"""
+Файл с классом, непосредственно расчитывающим стимул с учетом отклонений
+"""
 from connection.connection import Connection
 from counting.get_outs import Read_Outs
 

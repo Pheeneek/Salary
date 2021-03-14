@@ -1,3 +1,6 @@
+"""
+Файл с классом отрисовки вспомогательного окна с таблицей штатного расписания
+"""
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QRect, QCoreApplication
 from PyQt5.QtGui import QFont
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel

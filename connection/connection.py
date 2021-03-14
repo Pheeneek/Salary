@@ -1,10 +1,21 @@
+"""
+Файл с классом создания соединения с БД
+"""
 import sqlite3
 import settings
 
 
 class Connection:
+    """
+    Класс создания соединения с БД
+    """
     @staticmethod
-    def connect():
+    def connect() -> tuple:
+        """
+        Метод создания соединения с БД и создания основной таблицы, если ее не существует
+        :return: con - соединение
+                 cur - курсор соединения
+        """
         con = sqlite3.connect(settings.db_name)
         cur = con.cursor()
         cur.execute("CREATE TABLE IF NOT EXISTS salaries "
