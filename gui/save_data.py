@@ -75,13 +75,10 @@ class SaveData:
         :return: True, если проверки пройдены
                  False, если хоть одна проверка провалена
         """
-        if self.verify_ints(self.tarif) \
-                and self.verify_ints(self.salary) \
-                and self.verify_ints(self.pos_count) \
-                and self.verify_ints(self.decree_tarif):
-            return True
-        else:
-            return False
+        return bool(self.verify_ints(self.tarif)
+                    and self.verify_ints(self.salary)
+                    and self.verify_ints(self.pos_count)
+                    and self.verify_ints(self.decree_tarif))
 
     def verify_ints(self, value: str) -> bool:
         """
@@ -92,7 +89,7 @@ class SaveData:
         """
         try:
             value = int(value)
-            if 0 > value:
+            if value < 0:
                 self.gui.form.search_number.setText("Отрицательное значение данных!")
                 return False
         except ValueError:

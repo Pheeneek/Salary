@@ -2,8 +2,8 @@
 Файл с классом запуска расчета и вывода таблицы с результатами
 """
 import os
-from counting.fot_summary import FOTSummary
 from PyQt5.QtWidgets import QTableWidgetItem
+from counting.fot_summary import FOTSummary
 
 
 class CountStimulData:
@@ -59,12 +59,9 @@ class CountStimulData:
          :return: True, если проверки пройдены
                   False, если хоть одна проверка провалена
          """
-        if self.verify_path() \
-                and self.verify_ints(self.gui.form.workday_input.text()) \
-                and self.verify_ints(self.gui.form.fot_input.text()):
-            return True
-        else:
-            return False
+        return bool(self.verify_path()
+                    and self.verify_ints(self.gui.form.workday_input.text())
+                    and self.verify_ints(self.gui.form.fot_input.text()))
 
     def verify_ints(self, value: str) -> bool:
         """
@@ -91,6 +88,5 @@ class CountStimulData:
         """
         if os.path.exists(self.gui.form.file_input.text()):
             return True
-        else:
-            self.gui.form.message_label.setText("Файл отклонений не найден!")
-            return False
+        self.gui.form.message_label.setText("Файл отклонений не найден!")
+        return False

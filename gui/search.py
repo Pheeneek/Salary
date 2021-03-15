@@ -33,11 +33,12 @@ class Search:
                            f"(position_count LIKE '%{self.pos_count}%');")
             self.search_result = cursor.fetchall()
 
-    def search_clicked(self) -> list:
+    def search_clicked(self) -> any:
         """
         Метод, обрабатывающий результат поиска, настраивает кнопки, выводит количество
         найденных позиций и выводит первое значение в формы окна.
-        :return: self.result - список с результатами поиска, если он не пустой
+        :return: self.search_result - список с результатами поиска, если он не пустой
+                 иначе None
         """
         self.gui.actions.clear_form()
         if self.search_result and len(self.search_result) > 0:
@@ -53,4 +54,4 @@ class Search:
             self.gui.form.search_number.setText(f"Позиция : {0} из {0}")
         if self.search_result:
             self.gui.actions.position_output(self.search_result[0])
-            return self.search_result
+        return self.search_result

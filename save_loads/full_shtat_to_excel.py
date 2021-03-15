@@ -4,7 +4,6 @@
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
 from openpyxl.utils import get_column_letter
-
 from connection.connection import SqliteDB
 
 

@@ -85,7 +85,7 @@ class FOTSummary:
                 salary = i[5]
             try:
                 salary = round(salary / self.workdays * (self.workdays - self.outs[i[0]][0] -
-                                                         self.outs[i[0]][1] - self.outs[i[0]][2]), 2)
+                               self.outs[i[0]][1] - self.outs[i[0]][2]), 2)
                 i[5] = salary
             except (NameError, KeyError, TypeError):
                 pass
