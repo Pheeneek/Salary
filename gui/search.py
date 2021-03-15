@@ -1,7 +1,7 @@
 """
 Файл с классом, реализующим поиск в БД по паттернам
 """
-from connection.connection import Connection
+from connection.connection import SqliteDB
 
 
 class Search:
@@ -16,24 +16,22 @@ class Search:
         """
         self.gui = qtgui
         self.search, self.current_position = [], 0
-        self.con, self.cursor = Connection.connect()
+        self.db = SqliteDB()
         self.department = self.gui.form.department_input.text()
         self.position = self.gui.form.pos_input.text()
         self.fio = self.gui.form.fio_input.text()
         self.tarif = self.gui.form.tarif_input.text()
         self.salary = self.gui.form.salary_input.text()
         self.pos_count = self.gui.form.pos_count_input.text()
-        try:
-            self.cursor.execute(f"SELECT * FROM salaries WHERE "
-                                f"(department_code LIKE '%{self.department}%') AND "
-                                f"(position LIKE '%{self.position}%') AND "
-                                f"(fio LIKE '%{self.fio}%') AND "
-                                f"(tarif LIKE '%{self.tarif}%') AND "
-                                f"(salary LIKE '%{self.salary}%') AND "
-                                f"(position_count LIKE '%{self.pos_count}%');")
-            self.search_result = self.cursor.fetchall()
-        except NameError:
-            pass
+        with self.db as cursor:
+            cursor.execute(f"SELECT * FROM salaries WHERE "
+                           f"(department_code LIKE '%{self.department}%') AND "
+                           f"(position LIKE '%{self.position}%') AND "
+                           f"(fio LIKE '%{self.fio}%') AND "
+                           f"(tarif LIKE '%{self.tarif}%') AND "
+                           f"(salary LIKE '%{self.salary}%') AND "
+                           f"(position_count LIKE '%{self.pos_count}%');")
+            self.search_result = cursor.fetchall()
 
     def search_clicked(self) -> list:
         """
@@ -41,6 +39,7 @@ class Search:
         найденных позиций и выводит первое значение в формы окна.
         :return: self.result - список с результатами поиска, если он не пустой
         """
+        self.gui.actions.clear_form()
         if self.search_result and len(self.search_result) > 0:
             self.gui.form.search_number.setText(f"Позиция : {1} из {len(self.search_result)}")
             self.gui.form.delete_button.setEnabled(True)

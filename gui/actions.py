@@ -4,7 +4,7 @@
 """
 
 from PyQt5 import QtWidgets
-from connection.connection import Connection
+from connection.connection import SqliteDB
 
 
 class Actions:
@@ -17,6 +17,7 @@ class Actions:
         :param qtgui: экземпляр класса TkGUI (отрисовки основного окна)
         """
         self.gui = qtgui
+        self.db = SqliteDB()
 
     def position_output(self, pos_info: list) -> None:
         """
@@ -73,6 +74,8 @@ class Actions:
         self.gui.form.right_button.setEnabled(False)
         self.gui.form.delete_button.setEnabled(False)
         self.gui.form.save_button.setEnabled(False)
+        self.gui.form.right_button_max.setEnabled(False)
+        self.gui.form.left_button_max.setEnabled(False)
 
     def clear_stimul_form(self):
         self.gui.form.stimul_table.setRowCount(0)
@@ -90,9 +93,9 @@ class Actions:
                                                QtWidgets.QMessageBox.Yes,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
-            conn, cursor = Connection.connect()
-            cursor.execute(f"DELETE FROM salaries WHERE id = '{self.gui.search[self.gui.current_position - 1][0]}';")
-            conn.commit()
+            with self.db as cursor:
+                cursor.execute(f"DELETE FROM salaries WHERE id = "
+                               f"'{self.gui.search[self.gui.current_position - 1][0]}';")
             self.clear_form()
 
     def save_confirmation(self, text: str, title: str) -> None:

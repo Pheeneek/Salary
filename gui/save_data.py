@@ -2,20 +2,21 @@
 Класс, реализующий сохранение новой позиции в БД
 """
 from PyQt5 import QtWidgets
-from connection.connection import Connection
+from connection.connection import SqliteDB
 
 
 class SaveData:
     """
     Класс сохранения данных сотрудника в БД
     """
+
     def __init__(self, qtgui: any) -> None:
         """
         Метод init класса. Считывает данные из полей ввода
         :param qtgui: экземпляр класса TkGUI (отрисовки основного окна)
         """
         self.gui = qtgui
-        self.con, self.cursor = Connection.connect()
+        self.db = SqliteDB()
         self.department = self.gui.form.department_input.text()
         self.position = self.gui.form.pos_input.text()
         self.fio = self.gui.form.fio_input.text()
@@ -47,18 +48,15 @@ class SaveData:
         Метод, осуществляющий попытку записи данных сотрудников в БД
         :return: None
         """
-        if self.verify_data():
-            try:
-                self.cursor.execute(f"INSERT INTO salaries (department_code, position, position_count, "
-                                    f"tarif, salary, fio, decree, history, decree_tarif, position_type) "
-                                    f"VALUES ('{self.department}', '{self.position}', '{self.pos_count}', "
-                                    f"'{self.tarif}', '{self.salary}', '{self.fio}', '{self.decree}', "
-                                    f"'{self.history}', '{self.decree_tarif}', '{self.position_type}');")
-                self.con.commit()
+        with self.db as cursor:
+            if self.verify_data():
+                cursor.execute(f"INSERT INTO salaries (department_code, position, position_count, "
+                               f"tarif, salary, fio, decree, history, decree_tarif, position_type) "
+                               f"VALUES ('{self.department}', '{self.position}', '{self.pos_count}', "
+                               f"'{self.tarif}', '{self.salary}', '{self.fio}', '{self.decree}', "
+                               f"'{self.history}', '{self.decree_tarif}', '{self.position_type}');")
                 self.gui.form.save_button.setEnabled(False)
                 self.save_confirmation()
-            except NameError:
-                print("Ошибка записи в базу!!!")
 
     def save_confirmation(self) -> None:
         """

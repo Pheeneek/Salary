@@ -1,7 +1,7 @@
 """
 Файл с классом, непосредственно расчитывающим стимул с учетом отклонений
 """
-from connection.connection import Connection
+from connection.connection import SqliteDB
 from counting.get_outs import ReadOuts
 
 
@@ -9,6 +9,7 @@ class FOTSummary:
     """
     Класс расчета размера стимулирующих надбавок
     """
+
     def __init__(self, qtgui: any, fot: int, workdays: int, file: str) -> None:
         """
         Метод инициализации класса
@@ -16,7 +17,7 @@ class FOTSummary:
         :param workdays: Количество рабочих дней в месяце
         :param file: Файл с отклонениями
         """
-        self.conn, self.cursor = Connection.connect()
+        self.db = SqliteDB()
         self.gui = qtgui
         self.fot = fot
         self.workdays = workdays
@@ -35,11 +36,12 @@ class FOTSummary:
     def get_shtat_data(self) -> list:
         """
         Метод обращается к БД и получает список работающих (без вакансий и начальников)
-        :return: self.cursor.fetchall() - список с данными работников
+        :return: cursor.fetchall() - список с данными работников
         """
-        self.cursor.execute(f"SELECT * FROM salaries WHERE (fio NOT LIKE '%Вакансия%') "
-                            f"AND (position_type NOT LIKE '%na%')")
-        return self.cursor.fetchall()
+        with self.db as cursor:
+            cursor.execute(f"SELECT * FROM salaries WHERE (fio NOT LIKE '%Вакансия%') "
+                           f"AND (position_type NOT LIKE '%na%')")
+        return cursor.fetchall()
 
     def get_department_dict(self) -> None:
         """

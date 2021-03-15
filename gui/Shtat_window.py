@@ -1,12 +1,10 @@
-"""
-Файл с классом отрисовки вспомогательного окна с таблицей штатного расписания
-"""
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QRect, QCoreApplication
 from PyQt5.QtGui import QFont
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
 from PyQt5.QtWidgets import (QMainWindow,
                              QTableView)
 from PyQt5 import QtWidgets
+from save_loads.full_shtat_to_excel import FullShtatToExcel
 import settings
 
 
@@ -39,10 +37,12 @@ class Shtat(QMainWindow):
         self.resize(1380, 886)
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
-        self.shtat_table_view = QtWidgets.QTableView(self.centralwidget)
-        self.shtat_table_view.setGeometry(QRect(0, 0, 1381, 821))
-        self.shtat_table_view.setObjectName("shtat_table_view")
-        self.shtat_table_view.resizeColumnsToContents()
+
+        self.view = QTableView(self.centralwidget)
+        self.view.setGeometry(QRect(0, 0, 1381, 821))
+        self.view.setObjectName("shtat_table_view")
+        self.view.setSortingEnabled(True)
+
         self.filter_combo_box = QtWidgets.QComboBox(self.centralwidget)
         self.filter_combo_box.setGeometry(QRect(250, 840, 231, 31))
         self.filter_combo_box.setObjectName("filter_combo_box")
@@ -58,10 +58,13 @@ class Shtat(QMainWindow):
         self.filter_label.setObjectName("filter_label")
         self.filter_button = QtWidgets.QPushButton(self.centralwidget)
         self.filter_button.setGeometry(QRect(800, 840, 171, 31))
+        self.save_shtat_button = QtWidgets.QPushButton(self.centralwidget)
+        self.save_shtat_button.setGeometry(QRect(1000, 840, 225, 31))
         font = QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(12)
         self.filter_button.setFont(font)
+        self.save_shtat_button.setFont(font)
         self.filter_button.setObjectName("filter_button")
         self.setCentralWidget(self.centralwidget)
 
@@ -69,36 +72,22 @@ class Shtat(QMainWindow):
         self.setWindowTitle(_translate("ShtatWindow", "Работа со штатным расписанием"))
         self.filter_label.setText(_translate("ShtatWindow", "Фильтровать по столбцу:"))
         self.filter_button.setText(_translate("ShtatWindow", "Поиск"))
+        self.save_shtat_button.setText(_translate("ShtatWindow", "Выгрузить штатное расписание"))
 
-        self.model = QSqlTableModel(self.shtat_table_view)
+        self.model = QSqlTableModel(self.view)
         self.model.setTable('salaries')
         self.model.setEditStrategy(QSqlTableModel.OnFieldChange)
-        self.model.setHeaderData(0, Qt.Horizontal, self.filters[0])
-        self.model.setHeaderData(1, Qt.Horizontal, self.filters[1])
-        self.model.setHeaderData(2, Qt.Horizontal, self.filters[2])
-        self.model.setHeaderData(3, Qt.Horizontal, self.filters[3])
-        self.model.setHeaderData(4, Qt.Horizontal, self.filters[4])
-        self.model.setHeaderData(5, Qt.Horizontal, self.filters[5])
-        self.model.setHeaderData(6, Qt.Horizontal, self.filters[6])
-        self.model.setHeaderData(7, Qt.Horizontal, self.filters[7])
-        self.model.setHeaderData(8, Qt.Horizontal, self.filters[8])
-        self.model.setHeaderData(9, Qt.Horizontal, self.filters[9])
-        self.model.setHeaderData(10, Qt.Horizontal, self.filters[10])
+        for i in range(0, len(self.filters)):
+            self.model.setHeaderData(i, Qt.Horizontal, self.filters[i])
         self.model.select()
-
-        self.view = QTableView(self.shtat_table_view)
-        self.view.setGeometry(QRect(0, 0, 1381, 821))
-        self.shtat_table_view.resizeColumnsToContents()
-        self.view.resizeColumnsToContents()
-        self.view.setSortingEnabled(True)
 
         self.proxyModelContact = QSortFilterProxyModel(self)
         self.proxyModelContact.setSourceModel(self.model)
         self.view.setModel(self.proxyModelContact)
-
-        self.shtat_table_view.resizeColumnsToContents()
+        self.view.resizeColumnsToContents()
         self.filter_combo_box.addItems(self.filters)
         self.filter_button.clicked.connect(self.use_filter_button)
+        self.save_shtat_button.clicked.connect(self.use_save_shtat_button)
 
     def use_filter_button(self) -> None:
         """
@@ -108,3 +97,14 @@ class Shtat(QMainWindow):
         """
         self.proxyModelContact.setFilterKeyColumn(self.filters.index(self.filter_combo_box.currentText()))
         self.proxyModelContact.setFilterRegExp(self.filter_input.text())
+
+    @staticmethod
+    def use_save_shtat_button() -> None:
+        """
+        Функция кнопки "Выгрузить штатное расписание". Выгружает все штатное расписание в
+        файл формата Excel
+        :return: None
+        """
+        file = QtWidgets.QFileDialog.getSaveFileName()[0]
+        saver = FullShtatToExcel(file if file.endswith(".xlsx") else f"{file}.xlsx")
+        saver.full_shtat_to_excel()

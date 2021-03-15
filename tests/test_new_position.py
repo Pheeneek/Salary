@@ -1,11 +1,12 @@
 import unittest
-from main import Save_data
-from window import Ui_MainWindow
+from gui.save_data import SaveData
+from connection.connection import Connection
 
 
 class MyTestCase(unittest.TestCase):
     def test_save(self):
-        Save_data()
+
+        con, cur = Connection()
         cur.execute("INSERT INTO salaries "
                     "(department_code, position, position_count, tarif, salary, fio)"
                     " VALUES ('33300', 'экономист', '1', '42700', '42700', 'Юрченко Станислав Дмитриевич');")

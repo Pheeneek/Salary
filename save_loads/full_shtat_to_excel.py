@@ -1,15 +1,18 @@
 """
-Файл с классом, реализующим выгрузку штатного расписаниея в файл Excel
+Файл с классом, реализующим выгрузку штатного расписания в файл Excel
 """
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Alignment, Side
+from openpyxl.utils import get_column_letter
+
 from connection.connection import SqliteDB
 
 
-class ShtatToExcel:
+class FullShtatToExcel:
     """
     Класс, выгружающий штатное расписание в файл Excel для заполнения отклонений
     """
+
     def __init__(self, file: str):
         """
         Метод инициализации класса
@@ -18,8 +21,8 @@ class ShtatToExcel:
         self.file = file
         self.db = SqliteDB()
         with self.db as cur:
-            cur.execute("SELECT * from salaries WHERE fio NOT LIKE '%Вакансия%' ORDER BY department_code;")
-        self.work_data = cur.fetchall()
+            cur.execute("SELECT * from salaries ORDER BY department_code, position_type;")
+            self.work_data = cur.fetchall()
 
         self.fill = PatternFill(fill_type='solid',
                                 start_color='c1c1c1',
@@ -59,17 +62,26 @@ class ShtatToExcel:
         self.ws = self.wb.active
         self.ws.title = 'Штатное расписание'
 
-    def shtat_to_excel(self) -> None:
+    def full_shtat_to_excel(self) -> None:
         """
         Метод выгрузки штатного расписания в файл
         :return: None
         """
-        rows = [["№ позиции",
-                 "Подразделение",
-                 "Должность", "ФИО", "Больничные дни", "Отпуск", "Простой"]]
+        rows = [['Номер',
+                 'Подразделение',
+                 'Должность',
+                 'Количество',
+                 'Тариф',
+                 'Оклад',
+                 'ФИО',
+                 'Декрет',
+                 'История',
+                 'Оклад замещающего работника',
+                 'Вид позиции',
+                 ]]
 
         for i in self.work_data:
-            rows.append([i[0], i[1], i[2], i[6], 0, 0, 0])
+            rows.append(i)
 
         for row in rows:
             self.ws.append(row)
@@ -92,4 +104,13 @@ class ShtatToExcel:
             for cell in cellObj:
                 self.ws[cell.coordinate].alignment = self.align_left
 
+        min_width = 10
+        for i, column_cells in enumerate(self.ws.columns, start=1):
+            width = (
+                length
+                if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+                                  for cell in column_cells)) >= min_width
+                else min_width
+            )
+            self.ws.column_dimensions[get_column_letter(i)].width = width
         self.wb.save(self.file)

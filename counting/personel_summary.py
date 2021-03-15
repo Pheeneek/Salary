@@ -2,7 +2,7 @@
 Файл с классом, расчитывающим текущую численность по категориям и подразделениям
 """
 
-from connection.connection import Connection
+from connection.connection import SqliteDB
 
 
 class PersonelSummary:
@@ -13,7 +13,7 @@ class PersonelSummary:
         """
         Метод инициализации класса
         """
-        self.con, self.cur = Connection.connect()
+        self.db = SqliteDB()
         self.code_list = []
         self.data = self.get_data()
         self.data_for_table = {}
@@ -23,8 +23,9 @@ class PersonelSummary:
         Метод, получающий из БД данные о всех записях
         :return: self.cur.fetchall() - список с результами запроса
         """
-        self.cur.execute("SELECT * FROM salaries")
-        return self.cur.fetchall()
+        with self.db as cur:
+            cur.execute("SELECT * FROM salaries")
+        return cur.fetchall()
 
     def get_department_dict(self) -> None:
         """
