@@ -3,7 +3,7 @@
 """
 from abc import ABC, abstractmethod
 import sqlite3
-from .. import settings
+import settings
 
 
 class DatabaseContextManager(ABC):
@@ -51,9 +51,15 @@ class DatabaseContextManager(ABC):
         Метод создает таблицу salaries в БД, если ее не существует
         :return: None
         """
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS departments "
+                            "(code INTEGER PRIMARY KEY, "
+                            "department VARCHAR(50));")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS positions "
+                            "(position_code VARCHAR(2) PRIMARY KEY, "
+                            "position_name VARCHAR(50));")
         self.cursor.execute("CREATE TABLE IF NOT EXISTS salaries "
                             "(id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                            "department_code INT NOT NULL, "
+                            "department_code INT, "
                             "position VARCHAR(45) NOT NULL, "
                             "position_count DECIMAL(10) NOT NULL, "
                             "tarif DECIMAL(10) NOT NULL, "
@@ -62,7 +68,11 @@ class DatabaseContextManager(ABC):
                             "decree TINYINT NULL, "
                             "history VARCHAR(255) NULL, "
                             "decree_tarif DECIMAL NULL, "
-                            "position_type VARCHAR(2) NOT NULL);")
+                            "position_type VARCHAR(2), "
+                            "FOREIGN KEY (position_type) "
+                            "REFERENCES positions (position_type), "
+                            "FOREIGN KEY (department_code) "
+                            "REFERENCES departments (code));")
         self.conn.commit()
 
 

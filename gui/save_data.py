@@ -78,7 +78,10 @@ class SaveData:
         return bool(self.verify_ints(self.tarif)
                     and self.verify_ints(self.salary)
                     and self.verify_ints(self.pos_count)
-                    and self.verify_ints(self.decree_tarif))
+                    and self.verify_ints(self.decree_tarif)
+                    and self.gui.form.fio_input.text()
+                    and self.gui.form.pos_input.text()
+                    )
 
     def verify_ints(self, value: str) -> bool:
         """
@@ -88,7 +91,7 @@ class SaveData:
                  False, еслм проверка провалена
         """
         try:
-            value = int(value)
+            value = float(value.replace(',', '.'))
             if value < 0:
                 self.gui.form.search_number.setText("Отрицательное значение данных!")
                 return False

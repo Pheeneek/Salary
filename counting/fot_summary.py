@@ -2,7 +2,7 @@
 Файл с классом, непосредственно расчитывающим стимул с учетом отклонений
 """
 from connection.connection import SqliteDB
-from counting.get_outs import ReadOuts
+from ..counting.get_outs import ReadOuts
 
 
 class FOTSummary:
@@ -41,7 +41,7 @@ class FOTSummary:
         with self.db as cursor:
             cursor.execute(f"SELECT * FROM salaries WHERE (fio NOT LIKE '%Вакансия%') "
                            f"AND (position_type NOT LIKE '%na%')")
-        return cursor.fetchall()
+            return cursor.fetchall()
 
     def get_department_dict(self) -> None:
         """

@@ -1,7 +1,6 @@
 """
 Файл с классом отрисовки основного окна и функциями кнопок
 """
-
 import os
 from PyQt5 import uic, QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication
@@ -9,10 +8,10 @@ from gui.save_data import SaveData
 from gui.search import Search
 from gui.Shtat_window import Shtat
 from gui.actions import Actions
-from counting.count_stimul_data import CountStimulData
 from save_loads.shtat_to_excel import ShtatToExcel
 from save_loads.personel_to_excel import PersonelToExcel
 from save_loads.stumul_to_excel import StimulToExcel
+from counting.count_stimul_data import CountStimulData
 
 
 class Gui:

@@ -1,6 +1,9 @@
+"""
+Файл класса отрисовки дополнительного окна с таблицей штатного расписания
+"""
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QRect, QCoreApplication
 from PyQt5.QtGui import QFont
-from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
+from PyQt5.QtSql import QSqlDatabase, QSqlRelationalTableModel, QSqlRelation, QSqlRelationalDelegate
 from PyQt5.QtWidgets import (QMainWindow,
                              QTableView)
 from PyQt5 import QtWidgets
@@ -71,9 +74,11 @@ class Shtat(QMainWindow):
         self.filter_button.setText(_translate("ShtatWindow", "Поиск"))
         self.save_shtat_button.setText(_translate("ShtatWindow", "Выгрузить штатное расписание"))
 
-        self.model = QSqlTableModel(self.view)
+        self.model = QSqlRelationalTableModel(self.view)
         self.model.setTable('salaries')
-        self.model.setEditStrategy(QSqlTableModel.OnFieldChange)
+        self.model.setEditStrategy(QSqlRelationalTableModel.OnFieldChange)
+        self.model.setRelation(1, QSqlRelation("departments", "code", "department"))
+        self.model.setRelation(10, QSqlRelation("positions", "position_code", "position_name"))
         for i in range(0, len(self.filters)):
             self.model.setHeaderData(i, Qt.Horizontal, self.filters[i])
         self.model.select()
@@ -82,9 +87,11 @@ class Shtat(QMainWindow):
         self.proxyModelContact.setSourceModel(self.model)
         self.view.setModel(self.proxyModelContact)
         self.view.resizeColumnsToContents()
+        self.view.setItemDelegate(QSqlRelationalDelegate(self.view))
         self.filter_combo_box.addItems(self.filters)
         self.filter_button.clicked.connect(self.use_filter_button)
         self.save_shtat_button.clicked.connect(self.use_save_shtat_button)
+        self.view.setItemDelegate(QSqlRelationalDelegate(self.view))
 
     def use_filter_button(self) -> None:
         """

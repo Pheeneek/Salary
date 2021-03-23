@@ -32,6 +32,7 @@ class Search:
                            f"(salary LIKE '%{self.salary}%') AND "
                            f"(position_count LIKE '%{self.pos_count}%');")
             self.search_result = cursor.fetchall()
+            print(self.search_result)
 
     def search_clicked(self) -> any:
         """

@@ -3,7 +3,7 @@
 """
 import os
 from PyQt5.QtWidgets import QTableWidgetItem
-from counting.fot_summary import FOTSummary
+from ..counting.fot_summary import FOTSummary
 
 
 class CountStimulData:
